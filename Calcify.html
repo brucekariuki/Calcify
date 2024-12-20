@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcify</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000;
+    }
+    .calculator-container {
+      width: 80%;
+      max-width: 400px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      cursor: pointer;
+      background-color: #f4f4f4;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .tab.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .mode {
+      display: none;
+    }
+    .mode.active {
+      display: block;
+    }
+
+    /* Calculator Styling */
+    .calculator {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Input Display */
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 2rem;
+      border: none;
+      background-color: #f0f0f0;
+      text-align: right;
+      margin-bottom: 20px;
+      color: #333;
+      font-family: Times New Roman;
+    }
+#expression,#result{
+	border:none;
+	background-color: transparent;
+	font-size: 30px;
+	height:45px;
+}
+#result{
+	font-size: 40px;
+	height: 50px;
+	font-family: cursive;
+}
+#expression{
+	margin-bottom: 5px;
+	margin-top: 40px;
+}
+    /* Keypad Layout */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* Button Styles */
+    button {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    button.operator {
+      color: #0080ff;
+    }
+    button.clear {
+      color: #ff4d4d;
+    }
+    button.equal {
+      background-color: #0080ff;
+      color: #ffffff;
+    }
+    button.exp {
+      color: #ff8000;
+    }
+h1{
+	font-size: 20px;
+	text-decoration: blink;
+}
+  </style>
+ </head>
+<body>
+  <div class="calculator-container">
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <div class="tab active" id="std-tab">Standard</div>
+      <div class="tab" id="conv-tab">Converter</div>
+    </div>
+
+    <!-- Standard Calculator Mode -->
+    <div class="mode active" id="std-mode">
+      <div class="calculator">
+      
+        <input type="text" id="expression"  readonly />
+        <input type="text" id="result" class="result" readonly />
+        <div class="keypad">
+          <button class="clear" onclick="clearScreen()">C</button>
+          <button class="operator" onclick="pressKey('%')">%</button>
+          <button class="operator" onclick="backspace()">⌫</button>
+          <button class="operator" onclick="pressKey('÷')">÷</button>
+
+          <button onclick="pressKey('7')">7</button>
+          <button onclick="pressKey('8')">8</button>
+          <button onclick="pressKey('9')">9</button>
+          <button class="operator" onclick="pressKey('×')">×</button>
+
+          <button onclick="pressKey('4')">4</button>
+          <button onclick="pressKey('5')">5</button>
+          <button onclick="pressKey('6')">6</button>
+          <button class="operator" onclick="pressKey('-')">-</button>
+
+          <button onclick="pressKey('1')">1</button>
+          <button onclick="pressKey('2')">2</button>
+          <button onclick="pressKey('3')">3</button>
+          <button class="operator" onclick="pressKey('+')">+</button>
+
+          <button onclick="pressKey('0')">0</button>
+          <button onclick="pressKey('.')">.</button>
+          <button class="exp" onclick="pressKey('E')">E</button>
+          <button class="equal" onclick="calculate()">=</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Converter Mode (Placeholder) -->
+    <div class="mode" id="conv-mode">
+      <!-- Add converter functionality here -->
+     <h1>Coming soon...</h1>
+  </div>
+
+  <script>
+    // Switch between tabs
+    const stdTab = document.getElementById('std-tab');
+    const convTab = document.getElementById('conv-tab');
+    const stdMode = document.getElementById('std-mode');
+    const convMode = document.getElementById('conv-mode');
+
+    stdTab.addEventListener('click', () => {
+      stdTab.classList.add('active');
+      convTab.classList.remove('active');
+      stdMode.classList.add('active');
+      convMode.classList.remove('active');
+    });
+
+    convTab.addEventListener('click', () => {
+      convTab.classList.add('active');
+      stdTab.classList.remove('active');
+      convMode.classList.add('active');
+      stdMode.classList.remove('active');
+    });
+
+    // Calculator functionality
+    let currentInput = '0';
+    let expression = '';
+    const expressionField = document.getElementById('expression');
+    const resultField = document.getElementById('result');
+
+    // Update the expression and result dynamically
+    function pressKey(key) {
+      if (currentInput === '0' && key !== 'E') {
+        currentInput = key;
+      } else {
+        currentInput += key;
+      }
+      expression = currentInput;
+      expressionField.value = expression;
+      resultField.value = getResult();
+    }
+
+    // Clear the input and result
+    function clearScreen() {
+      currentInput = '0';
+      expression = '';
+      expressionField.value = '';  // Reset expression field
+      resultField.value = '';      // Reset result field
+    }
+
+    // Backspace (delete last character)
+    function backspace() {
+      currentInput = currentInput.slice(0, -1) || '0';
+      expression = currentInput;
+      expressionField.value = expression;
+      resultField.value = getResult();
+    }
+
+    // Calculate the result
+    function calculate() {
+      try {
+        currentInput = eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')).toString();
+        expression = currentInput;
+        expressionField.value = expression;
+        resultField.value = currentInput;
+      } catch (error) {
+        currentInput = '0';
+        expression = currentInput;
+        expressionField.value = expression;
+        resultField.value = currentInput;
+      }
+    }
+
+    // Get the result from the expression
+    function getResult() {
+      try {
+        return eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')) || '0';
+      } catch (error) {
+        return '0';
+      }
+    }
+  </script>
+</body>
+</html>
