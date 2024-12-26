@@ -15,8 +15,8 @@
     }
     .calculator-container {
       width: 80%;
-      max-width: 400px;
-      background: #fff;
+      max-width: 300px;
+      background: #161416;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
@@ -62,13 +62,14 @@
       text-align: right;
       margin-bottom: 20px;
       color: #333;
-      font-family: Times New Roman;
+      font-family: Arial, sans-serif;
     }
 #expression,#result{
 	border:none;
 	background-color: transparent;
 	font-size: 30px;
 	height:45px;
+  color:white;
 }
 #result{
 	font-size: 40px;
@@ -114,6 +115,7 @@
 h1{
 	font-size: 20px;
 	text-decoration: blink;
+  color: white;
 }
   </style>
  </head>
@@ -132,30 +134,29 @@ h1{
         <input type="text" id="expression"  readonly />
         <input type="text" id="result" class="result" readonly />
         <div class="keypad">
-          <button class="clear" onclick="clearScreen()">C</button>
-          <button class="operator" onclick="pressKey('%')">%</button>
-          <button class="operator" onclick="backspace()">⌫</button>
-          <button class="operator" onclick="pressKey('÷')">÷</button>
+          <button class="clear" onclick="clearScreen()" aria-label="Clear">C</button>
+          <button class="operator" onclick="pressKey('%')" aria-label="Percentage">%</button>
+          <button class="operator" onclick="backspace()" aria-label="Backspace">⌫</button>
+          <button class="operator" onclick="pressKey('÷')" aria-label="Divide">÷</button>
+          <button onclick="pressKey('7')" aria-label="Seven">7</button>
+          <button onclick="pressKey('8')" aria-label="Eight">8</button>
+          <button onclick="pressKey('9')" aria-label="Nine">9</button>
+          <button class="operator" onclick="pressKey('×')" aria-label="Multiply">×</button>
 
-          <button onclick="pressKey('7')">7</button>
-          <button onclick="pressKey('8')">8</button>
-          <button onclick="pressKey('9')">9</button>
-          <button class="operator" onclick="pressKey('×')">×</button>
+          <button onclick="pressKey('4')" aria-label="Four">4</button>
+          <button onclick="pressKey('5')" aria-label="Five">5</button>
+          <button onclick="pressKey('6')" aria-label="Six">6</button>
+          <button class="operator" onclick="pressKey('-')" aria-label="Subtract">-</button>
 
-          <button onclick="pressKey('4')">4</button>
-          <button onclick="pressKey('5')">5</button>
-          <button onclick="pressKey('6')">6</button>
-          <button class="operator" onclick="pressKey('-')">-</button>
+          <button onclick="pressKey('1')" aria-label="One">1</button>
+          <button onclick="pressKey('2')" aria-label="Two">2</button>
+          <button onclick="pressKey('3')" aria-label="Three">3</button>
+          <button class="operator" onclick="pressKey('+')" aria-label="Add">+</button>
 
-          <button onclick="pressKey('1')">1</button>
-          <button onclick="pressKey('2')">2</button>
-          <button onclick="pressKey('3')">3</button>
-          <button class="operator" onclick="pressKey('+')">+</button>
-
-          <button onclick="pressKey('0')">0</button>
-          <button onclick="pressKey('.')">.</button>
-          <button class="exp" onclick="pressKey('E')">E</button>
-          <button class="equal" onclick="calculate()">=</button>
+          <button onclick="pressKey('0')" aria-label="Zero">0</button>
+          <button onclick="pressKey('.')" aria-label="Decimal">.</button>
+          <button class="exp" onclick="pressKey('E')" aria-label="Exponent">E</button>
+          <button class="equal" onclick="calculate()" aria-label="Equal">=</button>
         </div>
       </div>
     </div>
@@ -239,6 +240,7 @@ h1{
     // Get the result from the expression
     function getResult() {
       try {
+        return eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')) || '0';
         return eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')) || '0';
       } catch (error) {
         return '0';
