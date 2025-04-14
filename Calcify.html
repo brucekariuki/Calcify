@@ -46,13 +46,11 @@
       display: block;
     }
 
-    /* Calculator Styling */
     .calculator {
       display: flex;
       flex-direction: column;
     }
 
-    /* Input Display */
     input {
       width: 100%;
       padding: 10px;
@@ -64,23 +62,23 @@
       color: #333;
       font-family: Arial, sans-serif;
     }
-#expression,#result{
-	border:none;
-	background-color: transparent;
-	font-size: 30px;
-	height:45px;
-  color:white;
-}
-#result{
-	font-size: 40px;
-	height: 50px;
-	font-family: cursive;
-}
-#expression{
-	margin-bottom: 5px;
-	margin-top: 40px;
-}
-    /* Keypad Layout */
+    #expression, #result {
+      border: none;
+      background-color: transparent;
+      font-size: 30px;
+      height: 45px;
+      color: white;
+    }
+    #result {
+      font-size: 40px;
+      height: 50px;
+      font-family: cursive;
+    }
+    #expression {
+      margin-bottom: 5px;
+      margin-top: 40px;
+    }
+
     .keypad {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -88,7 +86,6 @@
       width: 100%;
     }
 
-    /* Button Styles */
     button {
       background-color: #1a1a1a;
       color: #ffffff;
@@ -98,7 +95,6 @@
       font-size: 24px;
       cursor: pointer;
     }
-
     button.operator {
       color: #0080ff;
     }
@@ -112,26 +108,23 @@
     button.exp {
       color: #ff8000;
     }
-h1{
-	font-size: 20px;
-	text-decoration: blink;
-  color: white;
-}
+    h1 {
+      font-size: 20px;
+      text-decoration: blink;
+      color: white;
+    }
   </style>
- </head>
+</head>
 <body>
   <div class="calculator-container">
-    <!-- Tab Navigation -->
     <div class="tabs">
       <div class="tab active" id="std-tab">Standard</div>
       <div class="tab" id="conv-tab">Converter</div>
     </div>
 
-    <!-- Standard Calculator Mode -->
     <div class="mode active" id="std-mode">
       <div class="calculator">
-      
-        <input type="text" id="expression"  readonly />
+        <input type="text" id="expression" readonly />
         <input type="text" id="result" class="result" readonly />
         <div class="keypad">
           <button class="clear" onclick="clearScreen()" aria-label="Clear">C</button>
@@ -142,17 +135,14 @@ h1{
           <button onclick="pressKey('8')" aria-label="Eight">8</button>
           <button onclick="pressKey('9')" aria-label="Nine">9</button>
           <button class="operator" onclick="pressKey('×')" aria-label="Multiply">×</button>
-
           <button onclick="pressKey('4')" aria-label="Four">4</button>
           <button onclick="pressKey('5')" aria-label="Five">5</button>
           <button onclick="pressKey('6')" aria-label="Six">6</button>
           <button class="operator" onclick="pressKey('-')" aria-label="Subtract">-</button>
-
           <button onclick="pressKey('1')" aria-label="One">1</button>
           <button onclick="pressKey('2')" aria-label="Two">2</button>
           <button onclick="pressKey('3')" aria-label="Three">3</button>
           <button class="operator" onclick="pressKey('+')" aria-label="Add">+</button>
-
           <button onclick="pressKey('0')" aria-label="Zero">0</button>
           <button onclick="pressKey('.')" aria-label="Decimal">.</button>
           <button class="exp" onclick="pressKey('E')" aria-label="Exponent">E</button>
@@ -161,14 +151,12 @@ h1{
       </div>
     </div>
 
-    <!-- Converter Mode  -->
     <div class="mode" id="conv-mode">
-      <!-- Converter Tab -->
-     <h1>Coming soon...</h1>
+      <h1>Coming soon...</h1>
+    </div>
   </div>
 
   <script>
-    // Switch between tabs
     const stdTab = document.getElementById('std-tab');
     const convTab = document.getElementById('conv-tab');
     const stdMode = document.getElementById('std-mode');
@@ -188,33 +176,44 @@ h1{
       stdMode.classList.remove('active');
     });
 
-    // Calculator functionality
     let currentInput = '0';
     let expression = '';
     const expressionField = document.getElementById('expression');
     const resultField = document.getElementById('result');
 
-    // Update the expression and result dynamically
     function pressKey(key) {
+      if (['+', '-', '÷', '×', '.'].includes(key) && 
+          (currentInput === '0' || /[+\-÷×.]$/.test(currentInput))) {
+        return; // Prevent multiple or invalid operators
+      }
+
+      if (key === '%') {
+        // Handle percentage calculation
+        currentInput = (parseFloat(currentInput) / 100).toString();
+        expression = currentInput;
+        expressionField.value = expression;
+        resultField.value = currentInput;
+        return;
+      }
+
       if (currentInput === '0' && key !== 'E') {
         currentInput = key;
       } else {
         currentInput += key;
       }
+
       expression = currentInput;
       expressionField.value = expression;
       resultField.value = getResult();
     }
 
-    // Clear the input and result
     function clearScreen() {
       currentInput = '0';
       expression = '';
-      expressionField.value = '';  // Reset expression field
-      resultField.value = '';      // Reset result field
+      expressionField.value = '';
+      resultField.value = '';
     }
 
-    // Backspace func
     function backspace() {
       currentInput = currentInput.slice(0, -1) || '0';
       expression = currentInput;
@@ -222,7 +221,6 @@ h1{
       resultField.value = getResult();
     }
 
-    // Calculate the result
     function calculate() {
       try {
         currentInput = eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')).toString();
@@ -237,10 +235,8 @@ h1{
       }
     }
 
-    // Get the result from the expression
     function getResult() {
       try {
-        return eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')) || '0';
         return eval(expression.replace('÷', '/').replace('×', '*').replace('E', 'e')) || '0';
       } catch (error) {
         return '0';
