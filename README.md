@@ -121,7 +121,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 - Inspired by the simplicity of modern calculators.
 - Thanks to the open-source community for their amazing tools and resources.
-
----
-
-Feel free to let me know if you'd like to add or customize anything further!
